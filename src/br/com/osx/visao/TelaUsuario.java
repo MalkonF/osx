@@ -1,0 +1,410 @@
+package br.com.osx.visao;
+
+import java.sql.*;
+import br.com.osx.dal.ModuloConexao;
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
+
+/**
+ * @author Malkon F
+ */
+public class TelaUsuario extends javax.swing.JInternalFrame {
+
+    Connection conexao = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    /**
+     * Creates new form TelaUsuario
+     */
+    public TelaUsuario() {
+        initComponents();
+
+        conexao = ModuloConexao.conector();
+    }
+
+    private void limparCampos() {
+
+        txtNome.setText(null);
+        txtFone.setText(null);
+        txtLogin.setText(null);
+        txtSenha.setText(null);
+        cmbPerfil.setSelectedItem(null);
+    }
+
+    private boolean estaVazio() {
+
+        return !(txtId.getText().isEmpty() || txtNome.getText().isEmpty() || txtLogin.getText().isEmpty() || txtSenha.getText().isEmpty());
+    }
+
+    private void consultar() {
+
+        String sql = "select * from tbusuarios where iduser=?";
+
+        try {
+
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtId.getText());
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+
+                txtNome.setText(rs.getString(2));
+                txtFone.setText(rs.getString(3));
+                txtLogin.setText(rs.getString(4));
+                txtSenha.setText(rs.getString(5));
+                cmbPerfil.setSelectedItem(rs.getString(6));
+
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Usuário não cadastrado");
+
+                limparCampos();
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void adicionar() {
+
+        String sql = "insert into tbusuarios(iduser, usuario, fone, login, senha, perfil) values(?, ?, ?, ?, ?, ?)";
+
+        try {
+
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtId.getText());
+            pst.setString(2, txtNome.getText());
+            pst.setString(3, txtFone.getText());
+            pst.setString(4, txtLogin.getText());
+            pst.setString(5, txtSenha.getText());
+            pst.setString(6, (String) cmbPerfil.getSelectedItem());
+
+            if (estaVazio()) {
+
+                int adicionado = pst.executeUpdate();
+
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso");
+                    txtId.setText(null);
+                    limparCampos();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void alterar() {
+
+        String sql = "update tbusuarios set usuario=?, fone=?, login=?, senha=?, perfil=? where iduser=?";
+
+        try {
+
+            pst = conexao.prepareStatement(sql);
+            pst.setString(6, txtId.getText());
+            pst.setString(1, txtNome.getText());
+            pst.setString(2, txtFone.getText());
+            pst.setString(3, txtLogin.getText());
+            pst.setString(4, txtSenha.getText());
+            pst.setString(5, (String) cmbPerfil.getSelectedItem());
+
+            if (estaVazio()) {
+
+                int adicionado = pst.executeUpdate();
+
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário modificado com sucesso");
+                    txtId.setText(null);
+                    limparCampos();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+            }
+
+        } catch (HeadlessException | SQLException e) {
+
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void remover() {
+
+        int confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?", "Atenção", JOptionPane.YES_NO_OPTION);
+
+        if (confirma == JOptionPane.YES_OPTION) {
+
+            String sql = "delete from tbusuarios where iduser=?";
+
+            try {
+
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtId.getText());
+                int apagado = pst.executeUpdate();
+
+                if (apagado > 0) {
+
+                    JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso");
+                    txtId.setText(null);
+                    limparCampos();
+                } 
+
+            } catch (Exception e) {
+
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        lblId = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        lblLogin = new javax.swing.JLabel();
+        lblSenha = new javax.swing.JLabel();
+        lblPerfil = new javax.swing.JLabel();
+        txtLogin = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
+        txtSenha = new javax.swing.JTextField();
+        txtNome = new javax.swing.JTextField();
+        cmbPerfil = new javax.swing.JComboBox<>();
+        btnCriar = new javax.swing.JButton();
+        btnLer = new javax.swing.JButton();
+        btnAtualizar = new javax.swing.JButton();
+        btnDeletar = new javax.swing.JButton();
+        lblFone = new javax.swing.JLabel();
+        txtFone = new javax.swing.JTextField();
+
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setTitle("Usuários");
+        setPreferredSize(new java.awt.Dimension(520, 600));
+
+        lblId.setText("ID:");
+        lblId.setToolTipText("Id é um número único que identifica o usuário no sistema.");
+
+        lblNome.setText("Nome:");
+
+        lblLogin.setText("Login:");
+
+        lblSenha.setText("Senha:");
+
+        lblPerfil.setText("Perfil:");
+        lblPerfil.setToolTipText("Perfil vai definir as permissões do usuário no sistema.");
+
+        txtId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdActionPerformed(evt);
+            }
+        });
+
+        txtNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomeActionPerformed(evt);
+            }
+        });
+
+        cmbPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "admin", "usuario" }));
+        cmbPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPerfilActionPerformed(evt);
+            }
+        });
+
+        btnCriar.setText("Criar");
+        btnCriar.setToolTipText("Cria um usuário");
+        btnCriar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCriar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCriarActionPerformed(evt);
+            }
+        });
+
+        btnLer.setText("Buscar");
+        btnLer.setToolTipText("Lê um usuário");
+        btnLer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLerActionPerformed(evt);
+            }
+        });
+
+        btnAtualizar.setText("Atualizar");
+        btnAtualizar.setToolTipText("Altera informação usuário");
+        btnAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
+
+        btnDeletar.setText("Deletar");
+        btnDeletar.setToolTipText("Exclui um usuário");
+        btnDeletar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeletar.setPreferredSize(new java.awt.Dimension(800, 600));
+        btnDeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarActionPerformed(evt);
+            }
+        });
+
+        lblFone.setText("Fone:");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblNome)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblFone)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFone))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblLogin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtLogin))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblPerfil)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblSenha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSenha))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDeletar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnCriar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAtualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                    .addComponent(btnLer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbPerfil, lblFone, lblId, lblLogin, lblNome, lblPerfil, lblSenha});
+
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(btnLer, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCriar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeletar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(124, 124, 124)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblId)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblNome)
+                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblFone)
+                            .addComponent(txtFone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblLogin)
+                            .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblSenha)
+                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPerfil)
+                    .addComponent(cmbPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(137, Short.MAX_VALUE))
+        );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbPerfil, lblFone, lblId, lblLogin, lblNome, lblPerfil, lblSenha, txtFone, txtId, txtLogin, txtNome, txtSenha});
+
+        setBounds(0, 0, 610, 600);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdActionPerformed
+
+    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeActionPerformed
+
+    private void btnLerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLerActionPerformed
+        // TODO add your handling code here:
+        consultar();
+    }//GEN-LAST:event_btnLerActionPerformed
+
+    private void cmbPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbPerfilActionPerformed
+
+    private void btnCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarActionPerformed
+        // TODO add your handling code here:
+        adicionar();
+    }//GEN-LAST:event_btnCriarActionPerformed
+
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        // TODO add your handling code here:
+        alterar();
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
+        // TODO add your handling code here:
+
+        remover();
+    }//GEN-LAST:event_btnDeletarActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAtualizar;
+    private javax.swing.JButton btnCriar;
+    private javax.swing.JButton btnDeletar;
+    private javax.swing.JButton btnLer;
+    private javax.swing.JComboBox<String> cmbPerfil;
+    private javax.swing.JLabel lblFone;
+    private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblLogin;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblPerfil;
+    private javax.swing.JLabel lblSenha;
+    private javax.swing.JTextField txtFone;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtLogin;
+    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtSenha;
+    // End of variables declaration//GEN-END:variables
+}
