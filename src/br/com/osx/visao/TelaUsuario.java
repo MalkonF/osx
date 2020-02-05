@@ -230,7 +230,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         btnCriar.setText("Criar");
         btnCriar.setToolTipText("Cria um usuário");
-        btnCriar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCriar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCriar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCriarActionPerformed(evt);
@@ -239,7 +239,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         btnLer.setText("Buscar");
         btnLer.setToolTipText("Lê um usuário");
-        btnLer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnLer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLerActionPerformed(evt);
@@ -248,7 +248,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         btnAtualizar.setText("Atualizar");
         btnAtualizar.setToolTipText("Altera informação usuário");
-        btnAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtualizarActionPerformed(evt);
@@ -257,7 +257,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         btnDeletar.setText("Deletar");
         btnDeletar.setToolTipText("Exclui um usuário");
-        btnDeletar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeletar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnDeletar.setPreferredSize(new java.awt.Dimension(800, 600));
         btnDeletar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
