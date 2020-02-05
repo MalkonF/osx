@@ -13,8 +13,8 @@ public class ModuloConexao {
 
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/dbinfox";
-        String user = "phpmyadmin2";
-        String password = "123456";
+        String user = "root";
+        String password = "123";
 
         try {
 
